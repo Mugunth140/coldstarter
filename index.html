@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Reload Website Ping</title>
+</head>
+<body>
+  <h1>Hello World</h1>
+
+  <script>
+    const url = "https://mingle-o93j.onrender.com/coldstart";
+    const interval = 30000; // 30 seconds
+
+    function reloadWebsite() {
+      fetch(url)
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+          }
+          console.log("server started");
+        })
+        .catch((error) => {
+          console.error(`Error: ${error.message}`);
+        });
+    }
+
+    setInterval(reloadWebsite, interval);
+  </script>
+</body>
+</html>
