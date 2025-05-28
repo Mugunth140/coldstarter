@@ -2,29 +2,50 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Reload Website Ping</title>
+  <title>Multi-App Coldstart Pinger</title>
 </head>
 <body>
-  <h1>Hello World</h1>
+  <h1>Ping Multiple Apps</h1>
+  <ul id="status-list"></ul>
 
   <script>
-    const url = "https://mingle-o93j.onrender.com/coldstart";
+    const urls = [
+      "https://mingle-o93j.onrender.com/coldstart",
+      "https://boiler-backend.onrender.com/",
+    ];
     const interval = 30000; // 30 seconds
 
-    function reloadWebsite() {
-      fetch(url)
-        .then((response) => {
-          if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-          }
-          console.log("server started");
-        })
-        .catch((error) => {
-          console.error(`Error: ${error.message}`);
-        });
+    const statusList = document.getElementById("status-list");
+
+    function pingApps() {
+      urls.forEach((url, index) => {
+        fetch(url)
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error(`Status: ${response.status}`);
+            }
+            console.log(`✅ ${url} is awake`);
+            updateStatus(index, `${url}: ✅ Alive`);
+          })
+          .catch((error) => {
+            console.error(`❌ ${url} - ${error.message}`);
+            updateStatus(index, `${url}: ❌ ${error.message}`);
+          });
+      });
     }
 
-    setInterval(reloadWebsite, interval);
+    function updateStatus(index, message) {
+      let li = statusList.children[index];
+      if (!li) {
+        li = document.createElement("li");
+        statusList.appendChild(li);
+      }
+      li.textContent = message;
+    }
+
+    // Initial ping and start interval
+    pingApps();
+    setInterval(pingApps, interval);
   </script>
 </body>
 </html>
